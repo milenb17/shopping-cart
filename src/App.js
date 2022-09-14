@@ -12,9 +12,7 @@ function App() {
   
   const handleAddToCart = function(e) {
     e.preventDefault();
-    console.log(e.target);
     let count = parseInt(e.target.querySelector('input').value);
-    console.log(count);
     if (e.target.id in cart) {
       setCart(cart => {
         let newQuantity = cart[e.target.id].quantity + count;
@@ -27,7 +25,6 @@ function App() {
     }
     else {
       setCart(cart => {
-        console.log(cart);
         return (
           {
             ...cart,
@@ -42,7 +39,6 @@ function App() {
     let num = cart[e.target.id].quantity
     setNumCartItems(numCartItems => numCartItems -= num);
     setCart(cart => {
-      let num = cart[e.target.id].quantity;
       let newCart = {...cart};
       delete newCart[e.target.id];
       return newCart
