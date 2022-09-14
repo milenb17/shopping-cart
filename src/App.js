@@ -1,24 +1,63 @@
-import logo from './logo.svg';
-import './App.css';
-
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useState } from 'react';
+import Home from './Home';
+import Nav from './Nav';
+import Shop from './Shop';
+import Cart from './Cart';
+import items from './images/Images';
 function App() {
+  const [cart, setCart] = useState({});
+  const [numCartItems, setNumCartItems] = useState(0);
+  
+  
+  const handleAddToCart = function(e) {
+    e.preventDefault();
+    console.log(e.target);
+    let count = parseInt(e.target.querySelector('input').value);
+    console.log(count);
+    if (e.target.id in cart) {
+      setCart(cart => {
+        let newQuantity = cart[e.target.id].quantity + count;
+        return (
+          {
+            ...cart,
+            [e.target.id]: {...items[e.target.id], quantity: newQuantity}
+          })
+      })
+    }
+    else {
+      setCart(cart => {
+        console.log(cart);
+        return (
+          {
+            ...cart,
+            [e.target.id]: {...items[e.target.id], quantity: count}
+          })
+      });
+    }
+    setNumCartItems(numCartItems => numCartItems += count);
+  }
+
+  const handleRemoveCart = function(e) {
+    let num = cart[e.target.id].quantity
+    setNumCartItems(numCartItems => numCartItems -= num);
+    setCart(cart => {
+      let num = cart[e.target.id].quantity;
+      let newCart = {...cart};
+      delete newCart[e.target.id];
+      return newCart
+    });
+    
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Nav count={numCartItems}/>
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/shop' element={<Shop handleClick={handleAddToCart} items={items} />} />
+        <Route path='/cart' element={<Cart cart={cart} handleRemoveCart={handleRemoveCart}/>} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
