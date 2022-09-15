@@ -46,7 +46,7 @@ function App() {
     
   }
   return (
-    <BrowserRouter basename='/shopping-cart'>
+    <BrowserRouter baseName='/shopping-cart'>
       <Nav count={numCartItems}/>
       <Routes>
         <Route path='/' element={<Home />} />
